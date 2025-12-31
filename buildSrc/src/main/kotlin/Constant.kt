@@ -7,7 +7,7 @@ const val mod_id = "shimmer"
 
 //Common
 const val minecraft_version = "1.20.4"
-const val parchment_version = "1.20.4-2024.02.25"
+const val parchment_version = "1.20.4:2024.04.14"
 const val enabled_platforms = "fabric,neoforge"
 
 //Fabric

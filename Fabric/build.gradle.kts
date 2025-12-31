@@ -37,7 +37,7 @@ dependencies {
         exclude(group = "net.fabricmc.fabric-api")
     }
 
-    modImplementation("maven.modrinth:iris:1.6.17+1.20.4") {
+    modImplementation("maven.modrinth:iris:1.7.2+1.20.4") {
         exclude(group = "net.fabricmc.fabric-api")
     }
 
