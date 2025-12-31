@@ -31,7 +31,7 @@ public class Configuration {
 	/**
 	 * config location from mod jar and resource packs
 	 */
-	private static final ResourceLocation configLocation = new ResourceLocation(ShimmerConstants.MOD_ID, configurationFileName);
+	private static final ResourceLocation configLocation = ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, configurationFileName);
 
 	/**
 	 * the Gson object, with pretty print
@@ -82,7 +82,7 @@ public class Configuration {
 			for (var modId : Services.PLATFORM.getLoadedMods()) {
 				if (modId.equals(ShimmerConstants.MOD_ID)) continue;
 				causedSource = " automatic configuration added by mod " + modId;
-				ResourceLocation candidateConfigurationPath = new ResourceLocation(modId, configurationFileName);
+				ResourceLocation candidateConfigurationPath = ResourceLocation.fromNamespaceAndPath(modId, configurationFileName);
 				Optional<String> optionalConfiguration = readConfiguration(candidateConfigurationPath);
 				if (optionalConfiguration.isPresent()) {
 					ShimmerConfig config = gson.fromJson(optionalConfiguration.get(), ShimmerConfig.class);

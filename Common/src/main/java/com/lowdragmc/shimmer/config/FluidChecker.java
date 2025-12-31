@@ -16,11 +16,11 @@ interface FluidChecker extends Check {
 	default Pair<ResourceLocation, Fluid> fluid() {
 		var fluidName = getFluidName();
 		Objects.requireNonNull(fluidName);
-		if (!ResourceLocation.isValidResourceLocation(fluidName)) {
+		if (ResourceLocation.read(fluidName).isError()) {
 			ShimmerConstants.LOGGER.error("invalid fluid name " + fluidName + " form" + getConfigSource());
 			return null;
 		}
-		var fluidLocation = new ResourceLocation(fluidName);
+		var fluidLocation = ResourceLocation.parse(fluidName);
 		if (!BuiltInRegistries.FLUID.containsKey(fluidLocation)) {
 			ShimmerConstants.LOGGER.error("can't find fluid " + fluidLocation + " from" + getConfigSource());
 			return Pair.of(fluidLocation, null);

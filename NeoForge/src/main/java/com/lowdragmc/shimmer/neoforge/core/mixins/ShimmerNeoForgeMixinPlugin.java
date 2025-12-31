@@ -28,10 +28,10 @@ public class ShimmerNeoForgeMixinPlugin implements IMixinConfigPlugin , MixinPlu
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (IS_OPT_LOAD) return false;
-        if (mixinClassName.contains("com.lowdragmc.shimmer.forge.core.mixins.rubidium")) {
+        if (mixinClassName.contains("com.lowdragmc.shimmer.neoforge.core.mixins.rubidium")) {
             return IS_RUBIDIUM_LOAD;
         }
-        if (mixinClassName.contains("com.lowdragmc.shimmer.forge.core.mixins.oculus")) {
+        if (mixinClassName.contains("com.lowdragmc.shimmer.neoforge.core.mixins.oculus")) {
             return IS_OCULUS_LOAD;
         }
         return true;

@@ -1,14 +1,15 @@
 package com.lowdragmc.shimmer.neoforge.core.mixins.oculus;
 
+import com.google.common.collect.ImmutableList;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.lowdragmc.shimmer.ShimmerConstants;
-import net.coderbot.iris.gl.shader.StandardMacros;
-import net.coderbot.iris.shaderpack.StringPair;
+import net.irisshaders.iris.gl.shader.StandardMacros;
+import net.irisshaders.iris.helpers.StringPair;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +23,9 @@ public abstract class StandardMacrosMixin {
 
     @Inject(method = "createStandardEnvironmentDefines",
             at = @At(value = "INVOKE", ordinal = 1,
-                    target = "Lnet/coderbot/iris/gl/shader/StandardMacros;define(Ljava/util/List;Ljava/lang/String;)V"),
-            locals = LocalCapture.CAPTURE_FAILHARD
+                    target = "Lnet/irisshaders/iris/gl/shader/StandardMacros;define(Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)V")
     )
-    private static void injectMacro(CallbackInfoReturnable<Iterable<StringPair>> cir, ArrayList<StringPair> list) {
+    private static void injectMacro(CallbackInfoReturnable<ImmutableList<StringPair>> cir, @Local ArrayList<StringPair> list) {
         define(list, ShimmerConstants.SHIMMER_IDENTIFIER_MACRO);
     }
 }

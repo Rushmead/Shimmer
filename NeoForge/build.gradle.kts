@@ -37,16 +37,15 @@ dependencies {
     forgeRuntimeLibrary("icyllis.modernui:ModernUI-Core:$modernui_core_version")
     modCompileOnly("icyllis.modernui:ModernUI-NeoForge:${minecraft_version}-${modernui_version}")
 
-    modImplementation("maven.modrinth:embeddium:0.3.11+mc1.20.4")
+    modImplementation("maven.modrinth:embeddium:1.0.15+mc1.21.1")
     // There is no oculus 1.20.4 version currently
-    modCompileOnly("maven.modrinth:oculus:1.20.1-1.6.15a")
-
+    modImplementation("maven.modrinth:iris:1.8.12+1.21.1-neoforge")
 }
 
 tasks.processResources {
     inputs.property("version", project.version)
 
-    filesMatching("META-INF/mods.toml") {
+    filesMatching("META-INF/neoforge.mods.toml") {
         expand("version" to project.version)
     }
 }

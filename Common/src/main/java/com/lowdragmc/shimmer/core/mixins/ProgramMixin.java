@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,11 +60,13 @@ public abstract class ProgramMixin {
         }
 
         int testShaderId = GlStateManager.glCreateShader(type == Program.Type.VERTEX ? GL20.GL_VERTEX_SHADER : GL20.GL_FRAGMENT_SHADER);
-        GlStateManager.glShaderSource(testShaderId, processor.process(injectedShader));
+        List<String> processedShader = processor.process(injectedShader);
+        String fullProcessedShader = String.join("\n", processedShader);
+        GlStateManager.glShaderSource(testShaderId, processedShader);
         GlStateManager.glCompileShader(testShaderId);
         if (GlStateManager.glGetShaderi(testShaderId, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
             GlStateManager.glDeleteShader(testShaderId);
-            String errorInfo = StringUtils.trim(GlStateManager.glGetShaderInfoLog(testShaderId, Short.MAX_VALUE));
+            String errorInfo = GlStateManager.glGetShaderInfoLog(testShaderId, 32768);
             ShimmerConstants.LOGGER.error("Couldn't compile {} program({},{}):{}", type.name(), pShaderSourceName, shaderName, errorInfo);
             return shader;
         }

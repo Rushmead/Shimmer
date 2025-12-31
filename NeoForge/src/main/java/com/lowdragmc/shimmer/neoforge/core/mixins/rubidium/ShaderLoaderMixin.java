@@ -3,9 +3,9 @@ package com.lowdragmc.shimmer.neoforge.core.mixins.rubidium;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.lowdragmc.shimmer.client.light.LightManager;
 import com.lowdragmc.shimmer.client.postprocessing.PostProcessing;
-import me.jellysquid.mods.sodium.client.gl.shader.ShaderLoader;
-import me.jellysquid.mods.sodium.client.gl.shader.ShaderType;
 import net.minecraft.resources.ResourceLocation;
+import org.embeddedt.embeddium.impl.gl.shader.ShaderLoader;
+import org.embeddedt.embeddium.impl.gl.shader.ShaderType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -17,9 +17,8 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = ShaderLoader.class,remap = false)
 public abstract class ShaderLoaderMixin {
 
-    @SuppressWarnings({"mapping","target","unresolvable-target"})
     @ModifyExpressionValue(method = "loadShader",
-            at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/gl/shader/ShaderParser;parseShader(Ljava/lang/String;Lme/jellysquid/mods/sodium/client/gl/shader/ShaderConstants;)Ljava/lang/String;"))
+            at = @At(value = "INVOKE", target = "Lorg/embeddedt/embeddium/impl/gl/shader/ShaderParser;parseShader(Ljava/lang/String;Lorg/embeddedt/embeddium/impl/gl/shader/ShaderConstants;)Ljava/lang/String;"))
     private static String transformShader(String shader, ShaderType type, ResourceLocation name) {
         if (name.getPath().contains("block_layer_opaque")) {
             if (type == ShaderType.FRAGMENT) {

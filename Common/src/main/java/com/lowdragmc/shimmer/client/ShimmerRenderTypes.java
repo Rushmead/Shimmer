@@ -27,7 +27,7 @@ public class ShimmerRenderTypes {
 
     public static Pair<ShaderInstance, Consumer<ShaderInstance>> registerShaders(ResourceManager resourceManager) {
         try {
-            return Pair.of(new ShaderInstance(resourceManager, new ResourceLocation(ShimmerConstants.MOD_ID, "rendertype_armor_cutout_no_cull").toString(), DefaultVertexFormat.NEW_ENTITY),
+            return Pair.of(new ShaderInstance(resourceManager, ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "rendertype_armor_cutout_no_cull").toString(), DefaultVertexFormat.NEW_ENTITY),
                     shaderInstance -> EmissiveArmorRenderType.emissiveArmorGlintShader = shaderInstance);
         } catch (IOException e) {
             throw new RuntimeException(e);

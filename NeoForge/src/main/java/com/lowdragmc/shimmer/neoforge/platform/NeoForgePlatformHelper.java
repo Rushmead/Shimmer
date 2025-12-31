@@ -16,6 +16,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.NeoForgeConfig;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoader;
@@ -99,17 +100,12 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
 	@Override
 	public PostParticle createPostParticle(Particle parent, PostProcessing postProcessing) {
 		return new PostParticle(parent, postProcessing) {
-			@Override
-			public boolean shouldCull() {
-				return parent.shouldCull();
-			}
 		};
-
 	}
 
 	@Override
 	public boolean isLoadingStateValid() {
-		return ModLoader.isLoadingStateValid();
+		return !ModLoader.hasErrors();
 	}
 
 	@Override
@@ -129,13 +125,13 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
 
 	@Override
 	public ShimmerLoadConfigEvent postLoadConfigurationEvent(ShimmerLoadConfigEvent event) {
-		ModLoader.get().postEvent(new NeoForgeShimmerLoadConfigEvent(event));
+        NeoForge.EVENT_BUS.post(new NeoForgeShimmerLoadConfigEvent(event));
 		return event;
 	}
 
 	@Override
 	public ShimmerReloadEvent postReloadEvent(ShimmerReloadEvent event){
-		ModLoader.get().postEvent(new NeoForgeShimmerReloadEvent(event));
+        NeoForge.EVENT_BUS.post(new NeoForgeShimmerReloadEvent(event));
 		return event;
 	}
 

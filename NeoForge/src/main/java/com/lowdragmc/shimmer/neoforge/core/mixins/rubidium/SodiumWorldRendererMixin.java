@@ -2,11 +2,11 @@ package com.lowdragmc.shimmer.neoforge.core.mixins.rubidium;
 
 import com.lowdragmc.shimmer.client.light.LightManager;
 import com.lowdragmc.shimmer.core.IRenderSection;
-import me.jellysquid.mods.sodium.client.render.SodiumWorldRenderer;
-import me.jellysquid.mods.sodium.client.render.chunk.RenderSectionManager;
-import me.jellysquid.mods.sodium.client.render.viewport.Viewport;
 import net.minecraft.client.Camera;
 import net.minecraft.world.phys.Vec3;
+import org.embeddedt.embeddium.impl.render.EmbeddiumWorldRenderer;
+import org.embeddedt.embeddium.impl.render.chunk.RenderSectionManager;
+import org.embeddedt.embeddium.impl.render.viewport.Viewport;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +20,7 @@ import java.nio.FloatBuffer;
  * @date 2022/05/31
  * @implNote TODO
  */
-@Mixin(SodiumWorldRenderer.class)
+@Mixin(EmbeddiumWorldRenderer.class)
 public abstract class SodiumWorldRendererMixin {
     @Shadow(remap = false) private RenderSectionManager renderSectionManager;
 

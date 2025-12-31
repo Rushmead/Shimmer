@@ -18,7 +18,7 @@ subprojects {
     loom.run {
         silentMojangMappingsLicense()
         this.runConfigs.forEach { setting ->
-            setting.property("mixin.debug=true")
+            setting.property("mixin.debug=false")
             setting.property("mixin.debug.export=true")
             setting.property("mixin.dumpTargetOnFailure=true")
             setting.property("mixin.checks.interfaces=true")
@@ -57,10 +57,10 @@ subprojects {
             }
         }
         maven {
-            name = "tterrag maven"
-            url = uri("https://maven.tterrag.com/")
+            name = "create maven"
+            url = uri("https://maven.createmod.net/")
             content {
-                includeGroup("com.jozufozu.flywheel")
+                includeGroup("dev.engine-room.flywheel")
             }
         }
     }
@@ -129,7 +129,7 @@ allprojects {
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
-        options.release.set(17)
+        options.release.set(21)
     }
 
     extensions.getByType<JavaPluginExtension>().apply {

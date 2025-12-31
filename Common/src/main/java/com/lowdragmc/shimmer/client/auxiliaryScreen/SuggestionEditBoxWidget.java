@@ -69,8 +69,8 @@ public class SuggestionEditBoxWidget extends EditBox {
 	public void tick() {
 		var last = isComplete;
 		//check complete change
-		if (ResourceLocation.isValidResourceLocation(this.getValue())) {
-			ResourceLocation resourceLocation = new ResourceLocation(this.getValue());
+		if (ResourceLocation.read(this.getValue()).isSuccess()) {
+			ResourceLocation resourceLocation = ResourceLocation.parse(this.getValue());
 			isComplete = allSuggestion.contains(resourceLocation);
 			if (!last && isComplete) {
 				completeListeners.forEach(item -> item.accept(type, resourceLocation));
@@ -81,8 +81,8 @@ public class SuggestionEditBoxWidget extends EditBox {
 		//check candidate change
 		if (!Objects.equals(candidate, lastCandidate)) {
 			lastCandidate = candidate;
-			if (lastCandidate != null && ResourceLocation.isValidResourceLocation(lastCandidate)) {
-				ResourceLocation resourceLocation = new ResourceLocation(lastCandidate);
+			if (lastCandidate != null && ResourceLocation.read(lastCandidate).isSuccess()) {
+				ResourceLocation resourceLocation = ResourceLocation.parse(lastCandidate);
 				if (allSuggestion.contains(resourceLocation)) {
 					candidateListeners.forEach(item -> item.accept(type, resourceLocation));
 				}

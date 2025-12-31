@@ -22,14 +22,14 @@ public class MinecraftMixin {
 
     /***
      * Workaround for Forge's WorldEvent.Unload event
-     * @param screen
+     * @param nextScreen
      * @param ci
      */
-    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;)V",
+    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;Z)V",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/Minecraft;updateScreenAndTick(Lnet/minecraft/client/gui/screens/Screen;)V",
                     shift = At.Shift.AFTER))
-    private void worldUnloadEvent(Screen screen, CallbackInfo ci) {
+    private void worldUnloadEvent(Screen nextScreen, boolean keepResourcePacks, CallbackInfo ci) {
         if (this.level != null) {
             LightManager.clear();
         }

@@ -33,20 +33,19 @@ dependencies {
     include("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version")
 
     // Sodium
-    modImplementation("maven.modrinth:sodium:mc1.20.4-0.5.8") {
+    modImplementation("maven.modrinth:sodium:mc1.21.1-0.6.13-fabric") {
         exclude(group = "net.fabricmc.fabric-api")
     }
 
-    modImplementation("maven.modrinth:iris:1.7.2+1.20.4") {
+    modImplementation("maven.modrinth:iris:1.8.8+1.21.1-fabric") {
         exclude(group = "net.fabricmc.fabric-api")
     }
 
-    // There is no flywheel 1.20.4 version currently
-    // modImplementation("com.jozufozu.flywheel:flywheel-fabric-$minecraft_version:$fabric_flywheel_version")
+     modImplementation("dev.engine-room.flywheel:flywheel-fabric-$minecraft_version:$fabric_flywheel_version")
 
-    implementation("org.anarres:jcpp:1.4.14") {isTransitive = false}// for iris
-    implementation("io.github.douira:glsl-transformer:2.0.0-pre13") // for iris
-    implementation("org.antlr:antlr4-runtime:4.11.1") // for iris
+//    implementation("org.anarres:jcpp:1.4.14") {isTransitive = false}// for iris
+//    implementation("io.github.douira:glsl-transformer:2.0.0-pre13") // for iris
+//    implementation("org.antlr:antlr4-runtime:4.11.1") // for iris
 
     modImplementation("maven.modrinth:modmenu:$mod_menu_version")
 

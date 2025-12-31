@@ -1,6 +1,7 @@
 package com.lowdragmc.shimmer.neoforge;
 
 import com.lowdragmc.shimmer.ShimmerConstants;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ModConfig;
@@ -19,7 +20,6 @@ public class NeoForgeShimmerConfig {
     public static ModConfigSpec.IntValue getUboOffset() {
         if (UBO_OFFSET == null) {
             logAccessUnInit("UBO_OFFSET");
-            registerConfig();
         }
         return UBO_OFFSET;
     }
@@ -27,7 +27,6 @@ public class NeoForgeShimmerConfig {
     public static ModConfigSpec.BooleanValue getBlockBloom() {
         if (BLOCK_BLOOM == null) {
             logAccessUnInit("BLOCK_BLOOM");
-            registerConfig();
         }
         return BLOCK_BLOOM;
     }
@@ -35,7 +34,6 @@ public class NeoForgeShimmerConfig {
     public static ModConfigSpec.BooleanValue getLightMap() {
         if (LIGHT_MAP == null) {
             logAccessUnInit("LIGHT_MAP");
-            registerConfig();
         }
         return LIGHT_MAP;
     }
@@ -43,7 +41,6 @@ public class NeoForgeShimmerConfig {
     public static ModConfigSpec.BooleanValue getColoredLightEnable(){
         if (COLORED_LIGHT_ENABLE == null){
             logAccessUnInit("COLORED_LIGHT_ENABLE");
-            registerConfig();
         }
         return COLORED_LIGHT_ENABLE;
     }
@@ -51,7 +48,6 @@ public class NeoForgeShimmerConfig {
     public static ModConfigSpec.BooleanValue getBloomEnable(){
         if (BLOOM_ENABLE == null){
             logAccessUnInit("BLOOM_ENABLE");
-            registerConfig();
         }
         return BLOOM_ENABLE;
     }
@@ -59,7 +55,6 @@ public class NeoForgeShimmerConfig {
     public static ModConfigSpec.BooleanValue getAdditiveBlend(){
         if (ADDITIVE_BLEND == null){
             logAccessUnInit("ADDITIVE_BLEND");
-            registerConfig();
         }
         return ADDITIVE_BLEND;
     }
@@ -68,7 +63,6 @@ public class NeoForgeShimmerConfig {
     public static ModConfigSpec.IntValue getBloomColorAttachmentNumber() {
         if (BLOOM_COLOR_ATTACHMENT_NUMBER == null){
             logAccessUnInit("BLOOM_COLOR_ATTACHMENT_NUMBER");
-            registerConfig();
         }
         return BLOOM_COLOR_ATTACHMENT_NUMBER;
     }
@@ -77,7 +71,6 @@ public class NeoForgeShimmerConfig {
     public static ModConfigSpec.BooleanValue getInsertShaderInfo(){
         if (INSERT_SHADER_INFO == null){
             logAccessUnInit("INSERT_SHADER_INFO");
-            registerConfig();
         }
         return INSERT_SHADER_INFO;
     }
@@ -85,7 +78,6 @@ public class NeoForgeShimmerConfig {
     public static ModConfigSpec.BooleanValue getEnableBuildinSetting(){
         if (ENABLE_BUILDIN_SETTING == null) {
             logAccessUnInit("ENABLE_BUILDIN_SETTING");
-            registerConfig();
         }
         return ENABLE_BUILDIN_SETTING;
     }
@@ -99,10 +91,10 @@ public class NeoForgeShimmerConfig {
         }
     }
 
-    public static void registerConfig(){
+    public static void registerConfig(ModContainer modContainer){
         ModConfigSpec.Builder clientBuilder = new ModConfigSpec.Builder();
         registerClientConfig(clientBuilder);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT,clientBuilder.build());
+        modContainer.registerConfig(ModConfig.Type.CLIENT,clientBuilder.build());
     }
 
     private static void registerClientConfig(ModConfigSpec.Builder builder){

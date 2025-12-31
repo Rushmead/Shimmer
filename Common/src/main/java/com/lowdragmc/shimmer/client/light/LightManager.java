@@ -84,13 +84,13 @@ public enum LightManager {
     }
 
     private static String EntityInjectionLightMapColor(String s) {
-        s = s.replace("void main()", getShimmerImport() + "void main()");
-        return new StringBuffer(s).insert(s.lastIndexOf('}'), "lightMapColor = color_light(IViewRotMat * Position, lightMapColor);\n").toString();
+        s = s.replace("#moj_import <light.glsl>", getShimmerImport() + "#moj_import <light.glsl>");
+        return new StringBuffer(s).insert(s.lastIndexOf('}'), "lightMapColor = color_light(Position, lightMapColor);\n").toString();
     }
 
     private static String EntityInjectionVertexColor(String s) {
         s = s.replace("void main()", getShimmerImport() + "void main()");
-        return new StringBuffer(s).insert(s.lastIndexOf('}'), "vertexColor = color_light(IViewRotMat * Position, vertexColor);\n").toString();
+        return new StringBuffer(s).insert(s.lastIndexOf('}'), "vertexColor = color_light(Position, vertexColor);\n").toString();
     }
 
     private static String lightShader;
@@ -248,7 +248,7 @@ public enum LightManager {
         Vec3 localPlayerPosition = localPlayer.position();
         if (Minecraft.getInstance().level == null) return;
         List<AbstractClientPlayer> players = Minecraft.getInstance().level.players();
-        float partialTicks = Minecraft.getInstance().getFrameTime();
+        float partialTicks = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
         for (AbstractClientPlayer player : players) {
             Vec3 position = player.getPosition(partialTicks);
             if (player == localPlayer || position.distanceToSqr(localPlayerPosition) < 32 * 32){
@@ -499,11 +499,11 @@ public enum LightManager {
 			for (var  itemLight : config.itemLights){
 				var template = new ColorPointLight.Template(itemLight.radius, itemLight.color());
 				if (itemLight.itemName != null){
-					if (!ResourceLocation.isValidResourceLocation(itemLight.itemName)){
+					if (ResourceLocation.read(itemLight.itemName).isError()){
 						ShimmerConstants.LOGGER.error("invalid item name " + itemLight.itemName + " form" + config.configSource);
 						continue;
 					}
-					var itemLocation = new ResourceLocation(itemLight.itemName);
+					var itemLocation = ResourceLocation.read(itemLight.itemName).getOrThrow();
 					if (!BuiltInRegistries.ITEM.containsKey(itemLocation)){
 						ShimmerConstants.LOGGER.error("can't find item " + itemLocation + " from" + config.configSource);
 						continue;
@@ -511,11 +511,11 @@ public enum LightManager {
 					var item = BuiltInRegistries.ITEM.get(itemLocation);
 					registerItemLight(item, itemStack -> template);
 				}else {
-					if (!ResourceLocation.isValidResourceLocation(itemLight.itemTag)){
+					if (ResourceLocation.read(itemLight.itemTag).isError()){
 						ShimmerConstants.LOGGER.error("invalid item tag name " + itemLight.itemTag + " form" + config.configSource);
 						continue;
 					}
-					registerTagLight(new ResourceLocation(itemLight.itemTag),itemStack -> template);
+					registerTagLight(ResourceLocation.read(itemLight.itemTag).getOrThrow(),itemStack -> template);
 				}
 			}
 		}

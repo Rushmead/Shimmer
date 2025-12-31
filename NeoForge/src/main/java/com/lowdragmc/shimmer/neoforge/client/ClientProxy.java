@@ -23,7 +23,7 @@ import net.minecraft.server.packs.resources.ResourceProvider;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import org.jetbrains.annotations.NotNull;
@@ -47,12 +47,12 @@ public class ClientProxy extends CommonProxy implements ResourceManagerReloadLis
     public void shaderRegistry(RegisterShadersEvent event) {
         ResourceProvider resourceProvider = event.getResourceProvider();
         try {
-            event.registerShader(ReloadShaderManager.backupNewShaderInstance(resourceProvider, new ResourceLocation(ShimmerConstants.MOD_ID, "fast_blit"), DefaultVertexFormat.POSITION), shaderInstance -> RenderUtils.blitShader = shaderInstance);
-            event.registerShader(ReloadShaderManager.backupNewShaderInstance(resourceProvider, new ResourceLocation(ShimmerConstants.MOD_ID, "rendertype_armor_cutout_no_cull"), DefaultVertexFormat.NEW_ENTITY),
+            event.registerShader(ReloadShaderManager.backupNewShaderInstance(resourceProvider, ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "fast_blit"), DefaultVertexFormat.POSITION), shaderInstance -> RenderUtils.blitShader = shaderInstance);
+            event.registerShader(ReloadShaderManager.backupNewShaderInstance(resourceProvider, ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "rendertype_armor_cutout_no_cull"), DefaultVertexFormat.NEW_ENTITY),
                     shaderInstance -> ShimmerRenderTypes.EmissiveArmorRenderType.emissiveArmorGlintShader = shaderInstance);
-            event.registerShader(ReloadShaderManager.backupNewShaderInstance(resourceProvider,new ResourceLocation(ShimmerConstants.MOD_ID,"hsb_block"), HsbColorWidget.HSB_VERTEX_FORMAT), shaderInstance -> HsbColorWidget.hsbShader = shaderInstance);
+            event.registerShader(ReloadShaderManager.backupNewShaderInstance(resourceProvider, ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID,"hsb_block"), HsbColorWidget.HSB_VERTEX_FORMAT), shaderInstance -> HsbColorWidget.hsbShader = shaderInstance);
             if (ShaderSSBO.support()){
-                event.registerShader(ReloadShaderManager.backupNewShaderInstance(resourceProvider, new ResourceLocation(ShimmerConstants.MOD_ID, "pick_color"), DefaultVertexFormat.POSITION), Eyedropper.ShaderStorageBufferObject::setShader);
+                event.registerShader(ReloadShaderManager.backupNewShaderInstance(resourceProvider, ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "pick_color"), DefaultVertexFormat.POSITION), Eyedropper.ShaderStorageBufferObject::setShader);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -83,11 +83,13 @@ public class ClientProxy extends CommonProxy implements ResourceManagerReloadLis
     }
 
     @SubscribeEvent
-    public void registerOverlay(RegisterGuiOverlaysEvent event) {
-        event.registerBelowAll(new ResourceLocation(ShimmerConstants.MOD_ID, "screen_color_pick_overly"), (forgeGui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
+    public void registerOverlay(RegisterGuiLayersEvent event) {
+        event.registerBelowAll(ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "screen_color_pick_overly"),
+                (guiGraphics, deltaTracker) -> {
             Eyedropper.update(guiGraphics);
         });
-        event.registerBelowAll(new ResourceLocation(ShimmerConstants.MOD_ID, "screen_shimmer_light_counter"),(forgeGui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
+        event.registerBelowAll(ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "screen_shimmer_light_counter"),
+                (guiGraphics, deltaTracker) -> {
             LightCounter.Render.update(guiGraphics);
         });
     }

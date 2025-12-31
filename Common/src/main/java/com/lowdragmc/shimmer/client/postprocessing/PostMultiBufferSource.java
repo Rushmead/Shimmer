@@ -1,6 +1,7 @@
 package com.lowdragmc.shimmer.client.postprocessing;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,26 +19,24 @@ public class PostMultiBufferSource extends MultiBufferSource.BufferSource {
     private final static SectionBufferBuilderPack fixedBufferPack = new SectionBufferBuilderPack();
     public final static PostMultiBufferSource BUFFER_SOURCE = new PostMultiBufferSource();
 
-    private static void put(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> pMapBuilders, RenderType pRenderType) {
-        pMapBuilders.put(pRenderType, new BufferBuilder(pRenderType.bufferSize()));
+    private static void put(Object2ObjectLinkedOpenHashMap<RenderType, ByteBufferBuilder> pMapBuilders, RenderType pRenderType) {
+        pMapBuilders.put(pRenderType, new ByteBufferBuilder(pRenderType.bufferSize()));
     }
 
     protected PostMultiBufferSource() {
-        super(new BufferBuilder(256), Util.make(new Object2ObjectLinkedOpenHashMap<>(), (map) -> {
-            map.put(Sheets.solidBlockSheet(), fixedBufferPack.builder(RenderType.solid()));
-            map.put(Sheets.cutoutBlockSheet(), fixedBufferPack.builder(RenderType.cutout()));
-            map.put(Sheets.bannerSheet(), fixedBufferPack.builder(RenderType.cutoutMipped()));
+        super(new ByteBufferBuilder(256), Util.make(new Object2ObjectLinkedOpenHashMap<>(), (map) -> {
+            map.put(Sheets.solidBlockSheet(), fixedBufferPack.buffer(RenderType.solid()));
+            map.put(Sheets.cutoutBlockSheet(), fixedBufferPack.buffer(RenderType.cutout()));
+            map.put(Sheets.bannerSheet(), fixedBufferPack.buffer(RenderType.cutoutMipped()));
 //            analyzeShaderProperties.put(ShimmerRenderTypes.bloom(), fixedBufferPack.builder(ShimmerRenderTypes.bloom()));
-            map.put(Sheets.translucentCullBlockSheet(), fixedBufferPack.builder(RenderType.translucent()));
+            map.put(Sheets.translucentCullBlockSheet(), fixedBufferPack.buffer(RenderType.translucent()));
             put(map, Sheets.shieldSheet());
             put(map, Sheets.bedSheet());
             put(map, Sheets.shulkerBoxSheet());
             put(map, Sheets.signSheet());
             put(map, Sheets.chestSheet());
-            put(map, RenderType.armorGlint());
             put(map, RenderType.armorEntityGlint());
             put(map, RenderType.glint());
-            put(map, RenderType.glintDirect());
             put(map, RenderType.glintTranslucent());
             put(map, RenderType.entityGlint());
             put(map, RenderType.entityGlintDirect());
@@ -60,10 +59,8 @@ public class PostMultiBufferSource extends MultiBufferSource.BufferSource {
         endBatch(Sheets.translucentCullBlockSheet());
         endBatch(Sheets.bannerSheet());
         endBatch(Sheets.shieldSheet());
-        endBatch(RenderType.armorGlint());
         endBatch(RenderType.armorEntityGlint());
         endBatch(RenderType.glint());
-        endBatch(RenderType.glintDirect());
         endBatch(RenderType.glintTranslucent());
         endBatch(RenderType.entityGlint());
         endBatch(RenderType.entityGlintDirect());

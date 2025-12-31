@@ -24,13 +24,13 @@ public class QuadLighterMixin {
 
     @ModifyReceiver(method = "process",
             at = @At(value = "INVOKE",
-                    target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFF[IIZ)V"))
-    private VertexConsumer injectPutQuadData(VertexConsumer vertexConsumer, PoseStack.Pose poseEntry, BakedQuad quad, float[] colorMuls, float red, float green, float blue, int[] combinedLights, int combinedOverlay, boolean mulColor) {
+                    target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;putBulkData(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFFF[IIZ)V"))
+    private VertexConsumer injectPutQuadData(VertexConsumer instance, PoseStack.Pose pose, BakedQuad quad, float[] brightness, float red, float green, float blue, float alpha, int[] lightmap, int packedOverlay, boolean readAlpha) {
         if ((quad instanceof IBakedQuad bloomQuad && bloomQuad.isBloom()) || PostProcessing.isBlockBloom()) {
             for (int i = 0; i < lightmap.length; i++) {
                 lightmap[i] = lightmap[i] | 0x10000100;
             }
         }
-        return vertexConsumer;
+        return instance;
     }
 }

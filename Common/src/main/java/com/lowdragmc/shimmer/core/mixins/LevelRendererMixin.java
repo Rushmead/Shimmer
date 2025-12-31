@@ -8,7 +8,9 @@ import com.lowdragmc.shimmer.core.IRenderSection;
 import com.lowdragmc.shimmer.platform.Services;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.chunk.SectionRenderDispatcher;
+import net.minecraft.server.packs.resources.ResourceProvider;
 import org.joml.Matrix4f;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Camera;
@@ -48,31 +50,23 @@ public abstract class LevelRendererMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/DimensionSpecialEffects;constantAmbientLight()Z"))
-    private void injectRenderLevel(PoseStack poseStack, float pPartialTick, long pFinishNanoTime, boolean pRenderBlockOutline, Camera camera, GameRenderer pGameRenderer, LightTexture pLightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
+    private void injectRenderLevel(DeltaTracker deltaTracker, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f frustumMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
         this.level.getProfiler().popPush("block_bloom");
         PostProcessing.getBlockBloom().renderBlockPost();
     }
 
     @Inject(method = "renderSectionLayer",
             at = @At(value = "HEAD"))
-    private void preRenderChunkLayer(RenderType pRenderType,
-                                        PoseStack pPoseStack, double pCamX,
-                                        double pCamY, double pCamZ,
-                                        Matrix4f pProjectionMatrix,
-                                        CallbackInfo ci) {
-        if (PostProcessing.CHUNK_TYPES.contains(pRenderType)) {
+    private void preRenderChunkLayer(RenderType renderType, double x, double y, double z, Matrix4f frustrumMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
+        if (PostProcessing.CHUNK_TYPES.contains(renderType)) {
             GL30.glDrawBuffers(new int[] {GL30.GL_COLOR_ATTACHMENT0, Services.PLATFORM.getBloomColorAttachmentNumber()});
         }
     }
 
     @Inject(method = "renderSectionLayer",
             at = @At(value = "RETURN"))
-    private void postRenderChunkLayer(RenderType pRenderType,
-                                        PoseStack pPoseStack, double pCamX,
-                                        double pCamY, double pCamZ,
-                                        Matrix4f pProjectionMatrix,
-                                        CallbackInfo ci) {
-        if (PostProcessing.CHUNK_TYPES.contains(pRenderType)) {
+    private void postRenderChunkLayer(RenderType renderType, double x, double y, double z, Matrix4f frustrumMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
+        if (PostProcessing.CHUNK_TYPES.contains(renderType)) {
             GL30.glDrawBuffers(GL30.GL_COLOR_ATTACHMENT0);
         }
     }
@@ -82,7 +76,7 @@ public abstract class LevelRendererMixin {
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/LevelRenderer;checkPoseStack(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
                     ordinal = 1))
-    private void injectRenderLevelBloom(PoseStack poseStack, float pPartialTick, long pFinishNanoTime, boolean pRenderBlockOutline, Camera camera, GameRenderer pGameRenderer, LightTexture pLightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
+    private void injectRenderLevelBloom(DeltaTracker deltaTracker, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f frustumMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
         ProfilerFiller profilerFiller = this.level.getProfiler();
         for (PostProcessing postProcessing : PostProcessing.values()) {
             postProcessing.renderEntityPost(profilerFiller);
@@ -90,8 +84,8 @@ public abstract class LevelRendererMixin {
     }
 
     @Inject(method = "renderLevel", at = @At(value = "HEAD"))
-    private void injectRenderLevelPre(PoseStack pPoseStack, float pPartialTick, long pFinishNanoTime, boolean pRenderBlockOutline, Camera pCamera, GameRenderer pGameRenderer, LightTexture pLightTexture, Matrix4f pProjectionMatrix, CallbackInfo ci) {
-        Vec3 position = pCamera.getPosition();
+    private void injectRenderLevelPre(DeltaTracker deltaTracker, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f frustumMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
+        Vec3 position = camera.getPosition();
         int blockLightSize = 0;
         int left = LightManager.INSTANCE.leftBlockLightCount();
         FloatBuffer buffer = LightManager.INSTANCE.getBuffer();
@@ -114,23 +108,21 @@ public abstract class LevelRendererMixin {
     }
 
     @Inject(method = "renderLevel", at = @At(value = "RETURN"))
-    private void injectRenderLevelPost(PoseStack pPoseStack, float pPartialTick, long pFinishNanoTime, boolean pRenderBlockOutline, Camera pCamera, GameRenderer pGameRenderer, LightTexture pLightTexture, Matrix4f pProjectionMatrix, CallbackInfo ci) {
+    private void injectRenderLevelPost(DeltaTracker deltaTracker, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f frustumMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
         LightManager.INSTANCE.renderLevelPost();
     }
 
-    @SuppressWarnings({"UnresolvedMixinReference", "InvalidMemberReference", "InvalidInjectorMethodSignature", "MixinAnnotationTarget"})
     @Redirect(method = "initOutline",at = @At(value = "NEW",
-            target = "(Lnet/minecraft/client/renderer/texture/TextureManager;Lnet/minecraft/server/packs/resources/ResourceManager;Lcom/mojang/blaze3d/pipeline/RenderTarget;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/PostChain;"
+            target = "Lnet/minecraft/client/renderer/PostChain;"
     ))
-    private PostChain redirectInitOutline(TextureManager textureManager, ResourceManager resourceManager, RenderTarget renderTarget, ResourceLocation resourceLocation) throws IOException {
-        return ReloadShaderManager.backupNewPostChain(textureManager,resourceManager,renderTarget,resourceLocation);
+    private PostChain redirectInitOutline(TextureManager textureManager, ResourceProvider resourceProvider, RenderTarget screenTarget, ResourceLocation resourceLocation) throws IOException {
+        return ReloadShaderManager.backupNewPostChain(textureManager,resourceProvider,screenTarget,resourceLocation);
     }
 
-    @SuppressWarnings({"UnresolvedMixinReference", "InvalidMemberReference", "InvalidInjectorMethodSignature", "MixinAnnotationTarget"})
     @Redirect(method = "initTransparency",at = @At(value = "NEW",
-            target = "(Lnet/minecraft/client/renderer/texture/TextureManager;Lnet/minecraft/server/packs/resources/ResourceManager;Lcom/mojang/blaze3d/pipeline/RenderTarget;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/PostChain;"
+            target = "Lnet/minecraft/client/renderer/PostChain;"
     ))
-    private PostChain redirectInitTransparency(TextureManager textureManager, ResourceManager resourceManager, RenderTarget renderTarget, ResourceLocation resourceLocation) throws IOException {
-        return ReloadShaderManager.backupNewPostChain(textureManager,resourceManager,renderTarget,resourceLocation);
+    private PostChain redirectInitTransparency(TextureManager textureManager, ResourceProvider resourceProvider, RenderTarget screenTarget, ResourceLocation resourceLocation) throws IOException {
+        return ReloadShaderManager.backupNewPostChain(textureManager,resourceProvider,screenTarget,resourceLocation);
     }
 }

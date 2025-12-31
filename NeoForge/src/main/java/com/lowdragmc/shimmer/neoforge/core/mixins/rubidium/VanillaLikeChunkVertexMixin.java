@@ -1,8 +1,8 @@
 package com.lowdragmc.shimmer.neoforge.core.mixins.rubidium;
 
-import me.jellysquid.mods.sodium.client.render.chunk.terrain.material.Material;
-import me.jellysquid.mods.sodium.client.render.chunk.vertex.format.ChunkVertexEncoder;
-import me.jellysquid.mods.sodium.client.render.chunk.vertex.format.impl.VanillaLikeChunkVertex;
+import org.embeddedt.embeddium.impl.render.chunk.terrain.material.Material;
+import org.embeddedt.embeddium.impl.render.chunk.vertex.format.ChunkVertexEncoder;
+import org.embeddedt.embeddium.impl.render.chunk.vertex.format.impl.VanillaLikeChunkVertex;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,20 +20,20 @@ public abstract class VanillaLikeChunkVertexMixin {
         throw new RuntimeException();
     }
 
-    @Redirect(method = "lambda$getEncoder$0", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/render/chunk/vertex/format/impl/VanillaLikeChunkVertex;encodeDrawParameters(Lme/jellysquid/mods/sodium/client/render/chunk/terrain/material/Material;I)I"))
-    private static int injectMaterialForBloom(Material material, int i, long ptr, Material material1, ChunkVertexEncoder.Vertex vertex, int sectionIndex) {
-        var origin = encodeDrawParameters(material,i);
-        if ((vertex.light & 0x100) != 0) {
-            origin |= (0x01 << 4);
-        }
-        return origin;
-    }
-
-    @Redirect(method = "lambda$getEncoder$0", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/render/chunk/vertex/format/impl/VanillaLikeChunkVertex;encodeLight(I)I"))
-    private static int injectLightForBloom(int light, long ptr, Material material1, ChunkVertexEncoder.Vertex vertex, int sectionIndex) {
-        if ((light & 0x100) != 0) {
-            return 15 | 15 << 4;
-        }
-        return encodeLight(light);
-    }
+//    @Redirect(method = "lambda$getEncoder$0", at = @At(value = "INVOKE", target = "VanillaLikeChunkVertex;encodeDrawParameters(Lme/jellysquid/mods/sodium/client/render/chunk/terrain/material/Material;I)I"))
+//    private static int injectMaterialForBloom(Material material, int i, long ptr, Material material1, ChunkVertexEncoder.Vertex vertex, int sectionIndex) {
+//        var origin = encodeDrawParameters(material,i);
+//        if ((vertex.light & 0x100) != 0) {
+//            origin |= (0x01 << 4);
+//        }
+//        return origin;
+//    }
+//
+//    @Redirect(method = "lambda$getEncoder$0", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/render/chunk/vertex/format/impl/VanillaLikeChunkVertex;encodeLight(I)I"))
+//    private static int injectLightForBloom(int light, long ptr, Material material1, ChunkVertexEncoder.Vertex vertex, int sectionIndex) {
+//        if ((light & 0x100) != 0) {
+//            return 15 | 15 << 4;
+//        }
+//        return encodeLight(light);
+//    }
 }

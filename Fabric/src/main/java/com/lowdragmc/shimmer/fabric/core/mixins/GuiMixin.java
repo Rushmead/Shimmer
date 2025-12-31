@@ -1,6 +1,7 @@
 package com.lowdragmc.shimmer.fabric.core.mixins;
 
 import com.lowdragmc.shimmer.client.auxiliaryScreen.Eyedropper;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +18,7 @@ public class GuiMixin {
 	 * inject it by ourselves
 	 */
 	@Inject(method = "renderCrosshair" , at = @At("HEAD"))
-	private void injectRenderCrosshairForEyeDropper(GuiGraphics guiGraphics, CallbackInfo ci){
+	private void injectRenderCrosshairForEyeDropper(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci){
 		Eyedropper.update(guiGraphics);
 	}
 }

@@ -32,11 +32,10 @@ public class ColoredLightTracer {
         profiler.push("render_colored_light");
 
         var tesselator = Tesselator.getInstance();
-        var builder = tesselator.getBuilder();
+        var builder = tesselator.begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_COLOR);
         var camPos = camera.getPosition();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
-        builder.begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_COLOR);
         poseStack.pushPose();
         poseStack.translate(-camPos.x, -camPos.y, -camPos.z);
 
@@ -54,7 +53,6 @@ public class ColoredLightTracer {
                     x - OFFSET, y - OFFSET, z - OFFSET, x + OFFSET, y + OFFSET, z + OFFSET,
                     1.0f, 1.0f, 1.0f, 0.3f);
         }
-        tesselator.end();
 
         poseStack.popPose();
 

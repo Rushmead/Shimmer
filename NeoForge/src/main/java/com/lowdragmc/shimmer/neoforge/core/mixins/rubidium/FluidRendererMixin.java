@@ -1,15 +1,15 @@
 package com.lowdragmc.shimmer.neoforge.core.mixins.rubidium;
 
 import com.lowdragmc.shimmer.client.postprocessing.PostProcessing;
-import me.jellysquid.mods.sodium.client.model.color.ColorProvider;
-import me.jellysquid.mods.sodium.client.model.light.LightPipeline;
-import me.jellysquid.mods.sodium.client.model.light.data.QuadLightData;
-import me.jellysquid.mods.sodium.client.model.quad.ModelQuadView;
-import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.FluidRenderer;
-import me.jellysquid.mods.sodium.client.world.WorldSlice;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.material.FluidState;
+import org.embeddedt.embeddium.impl.model.color.ColorProvider;
+import org.embeddedt.embeddium.impl.model.light.LightPipeline;
+import org.embeddedt.embeddium.impl.model.light.data.QuadLightData;
+import org.embeddedt.embeddium.impl.model.quad.ModelQuadView;
+import org.embeddedt.embeddium.impl.render.chunk.compile.pipeline.FluidRenderer;
+import org.embeddedt.embeddium.impl.world.WorldSlice;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

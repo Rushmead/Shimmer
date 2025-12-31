@@ -55,10 +55,10 @@ public interface MixinPluginShared {
 	boolean IS_OPT_LOAD = doUnderOptifine(isClassFound("optifine.OptiFineTranformationService") || checkOptifine());
 	boolean IS_DASH_LOADER = isClassFound("dev.quantumfusion.dashloader.mixin.MixinPlugin");
 
-	boolean IS_SODIUM_LOAD = isClassFound("me.jellysquid.mods.sodium.mixin.SodiumMixinPlugin");
-	boolean IS_RUBIDIUM_LOAD = IS_SODIUM_LOAD;
+	boolean IS_SODIUM_LOAD = isClassFound("net.caffeinemc.mods.sodium.mixin.SodiumMixinPlugin");
+	boolean IS_RUBIDIUM_LOAD = isClassFound("org.embeddedt.embeddium.impl.mixin.MixinPlugin");;
 
-	boolean IS_IRIS_LOAD = isClassFound("net.coderbot.iris.compat.sodium.mixin.IrisSodiumCompatMixinPlugin");
+	boolean IS_IRIS_LOAD = isClassFound("net.irisshaders.iris.mixin.IrisMixinPlugin");
 	boolean IS_OCULUS_LOAD = IS_IRIS_LOAD;
 
 }

@@ -19,8 +19,9 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -32,15 +33,13 @@ import static net.minecraft.commands.Commands.literal;
  * @date 2022/5/12
  * @implNote ForgeEventListener
  */
-@Mod.EventBusSubscriber(modid = ShimmerConstants.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = ShimmerConstants.MOD_ID, value = Dist.CLIENT)
 @OnlyIn(Dist.CLIENT)
 public class NeoForgeEventListener {
 
     @SubscribeEvent
-    public static void onClientTickPost(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            ItemEntityLightSourceManager.onAllItemEntityTickEnd();
-        }
+    public static void onClientTickPost(ClientTickEvent.Post event) {
+        ItemEntityLightSourceManager.onAllItemEntityTickEnd();
     }
 
     @SubscribeEvent

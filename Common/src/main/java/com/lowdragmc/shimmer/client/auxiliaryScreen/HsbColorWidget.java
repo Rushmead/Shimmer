@@ -3,6 +3,7 @@ package com.lowdragmc.shimmer.client.auxiliaryScreen;
 import com.google.common.collect.ImmutableMap;
 import com.lowdragmc.shimmer.ShimmerConstants;
 import com.lowdragmc.shimmer.Utils;
+import com.lowdragmc.shimmer.client.HSBBufferBuilder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.datafixers.util.Pair;
@@ -24,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.mojang.blaze3d.vertex.DefaultVertexFormat.ELEMENT_POSITION;
 
 /**
  * the color picker using HSB color space<p>
@@ -40,13 +40,11 @@ public class HsbColorWidget extends AbstractWidget {
 	/**
 	 * the vertex format for HSB color, three four of float
 	 */
-	private static final VertexFormatElement HSB_Alpha = new VertexFormatElement(0, VertexFormatElement.Type.FLOAT, VertexFormatElement.Usage.COLOR, 4);
+	public static final VertexFormatElement HSB_Alpha = new VertexFormatElement(6,0, VertexFormatElement.Type.FLOAT, VertexFormatElement.Usage.COLOR, 4);
 
-	public static final VertexFormat HSB_VERTEX_FORMAT = new VertexFormat(
-			ImmutableMap.<String, VertexFormatElement>builder()
-					.put("Position", ELEMENT_POSITION)
-					.put("HSB_ALPHA", HSB_Alpha)
-					.build());
+	public static final VertexFormat HSB_VERTEX_FORMAT = VertexFormat.builder().add("Position", VertexFormatElement.POSITION)
+                    .add("HSB_ALPHA", HSB_Alpha)
+                            .build();
 
 	/**
 	 * all supported pick mode
@@ -115,7 +113,7 @@ public class HsbColorWidget extends AbstractWidget {
 	@Override
 	public void renderWidget(GuiGraphics guiGraphics, int i, int j, float f) {
 
-		BufferBuilder builder = Tesselator.getInstance().getBuilder();
+		BufferBuilder builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, HSB_VERTEX_FORMAT);
 		drawHsbContext(guiGraphics, builder);
 
 		renderInfo(guiGraphics, builder);
@@ -126,14 +124,13 @@ public class HsbColorWidget extends AbstractWidget {
 	 */
 	private void drawHsbContext(GuiGraphics guiGraphics, BufferBuilder builder) {
 		RenderSystem.setShader(() -> hsbShader);
-		builder.begin(VertexFormat.Mode.QUADS, HSB_VERTEX_FORMAT);
 
 		var pose = guiGraphics.pose().last().pose();
 		renderMain(pose, builder);
 		renderSlide(pose, builder);
 		renderColor(pose, builder);
 
-		BufferUploader.drawWithShader(builder.end());
+		BufferUploader.drawWithShader(builder.buildOrThrow());
 	}
 
 	/**
@@ -161,9 +158,8 @@ public class HsbColorWidget extends AbstractWidget {
 					_b = b;
 				}
 			}
-			builder.vertex(pose, getX(), getY(), 0.0f);
-			putColor(builder, _h, _s, _b, alpha).nextElement();
-			builder.endVertex();
+			builder.addVertex(pose, getX(), getY(), 0.0f);
+			putColor(builder, _h, _s, _b, alpha);
 		}
 
 		{
@@ -185,9 +181,8 @@ public class HsbColorWidget extends AbstractWidget {
 					_b = b;
 				}
 			}
-			builder.vertex(pose, getX(), getY() + height, 0.0f);
-			putColor(builder, _h, _s, _b, alpha).nextElement();
-			builder.endVertex();
+			builder.addVertex(pose, getX(), getY() + height, 0.0f);
+			putColor(builder, _h, _s, _b, alpha);
 		}
 
 		{
@@ -209,9 +204,8 @@ public class HsbColorWidget extends AbstractWidget {
 					_b = b;
 				}
 			}
-			builder.vertex(pose, getX() + width, getY() + height, 0.0f);
-			putColor(builder, _h, _s, _b, alpha).nextElement();
-			builder.endVertex();
+			builder.addVertex(pose, getX() + width, getY() + height, 0.0f);
+			putColor(builder, _h, _s, _b, alpha);
 		}
 
 		{
@@ -234,9 +228,8 @@ public class HsbColorWidget extends AbstractWidget {
 				}
 			}
 
-			builder.vertex(pose, getX() + width, getY(), 0.0f);
-			putColor(builder, _h, _s, _b, alpha).nextElement();
-			builder.endVertex();
+			builder.addVertex(pose, getX() + width, getY(), 0.0f);
+			putColor(builder, _h, _s, _b, alpha);
 		}
 	}
 
@@ -266,13 +259,11 @@ public class HsbColorWidget extends AbstractWidget {
 					_b = 0f;
 				}
 			}
-			builder.vertex(pose, barX, getY() + height, 0.0f);
-			putColor(builder, _h, _s, _b, alpha).nextElement();
-			builder.endVertex();
+			builder.addVertex(pose, barX, getY() + height, 0.0f);
+			putColor(builder, _h, _s, _b, alpha);
 
-			builder.vertex(pose, barX + barWidth, getY() + height, 0.0f);
-			putColor(builder, _h, _s, _b, alpha).nextElement();
-			builder.endVertex();
+			builder.addVertex(pose, barX + barWidth, getY() + height, 0.0f);
+			putColor(builder, _h, _s, _b, alpha);
 		}
 
 		{
@@ -294,13 +285,11 @@ public class HsbColorWidget extends AbstractWidget {
 					_b = 1f;
 				}
 			}
-			builder.vertex(pose, barX + barWidth, getY(), 0.0f);
-			putColor(builder, _h, _s, _b, alpha).nextElement();
-			builder.endVertex();
+			builder.addVertex(pose, barX + barWidth, getY(), 0.0f);
+			putColor(builder, _h, _s, _b, alpha);
 
-			builder.vertex(pose, barX, getY(), 0.0f);
-			putColor(builder, _h, _s, _b, alpha).nextElement();
-			builder.endVertex();
+			builder.addVertex(pose, barX, getY(), 0.0f);
+			putColor(builder, _h, _s, _b, alpha);
 		}
 
 
@@ -328,21 +317,17 @@ public class HsbColorWidget extends AbstractWidget {
 	private void renderColor(Matrix4f pose, BufferBuilder builder) {
 		var colorX = getX() + width + gap + barWidth + 10 + 30;
 		var colorSideLength = 20;
-		builder.vertex(pose, colorX, getY(), 0.0f);
-		putColor(builder, h, s, b, alpha).nextElement();
-		builder.endVertex();
+		builder.addVertex(pose, colorX, getY(), 0.0f);
+		putColor(builder, h, s, b, alpha);
 
-		builder.vertex(pose, colorX, getY() + colorSideLength, 0.0f);
-		putColor(builder, h, s, b, alpha).nextElement();
-		builder.endVertex();
+		builder.addVertex(pose, colorX, getY() + colorSideLength, 0.0f);
+		putColor(builder, h, s, b, alpha);
 
-		builder.vertex(pose, colorX + colorSideLength, getY() + colorSideLength, 0.0f);
-		putColor(builder, h, s, b, alpha).nextElement();
-		builder.endVertex();
+		builder.addVertex(pose, colorX + colorSideLength, getY() + colorSideLength, 0.0f);
+		putColor(builder, h, s, b, alpha);
 
-		builder.vertex(pose, colorX + colorSideLength, getY(), 0.0f);
-		putColor(builder, h, s, b, alpha).nextElement();
-		builder.endVertex();
+		builder.addVertex(pose, colorX + colorSideLength, getY(), 0.0f);
+		putColor(builder, h, s, b, alpha);
 
 	}
 
@@ -350,10 +335,7 @@ public class HsbColorWidget extends AbstractWidget {
 	 * put hsb color into BufferBuilder
 	 */
 	private BufferBuilder putColor(BufferBuilder builder, float h, float s, float b, float alpha) {
-		builder.putFloat(0, h);
-		builder.putFloat(4, s);
-		builder.putFloat(8, b);
-		builder.putFloat(12, alpha);
+        ((HSBBufferBuilder) builder).shimmer$setHSB(h, s, b, alpha);
 		return builder;
 	}
 
@@ -493,7 +475,7 @@ public class HsbColorWidget extends AbstractWidget {
 	 */
 	public static Pair<ShaderInstance, Consumer<ShaderInstance>> registerShaders(ResourceManager resourceManager) {
 		try {
-			return Pair.of(new ShaderInstance(resourceManager, new ResourceLocation(ShimmerConstants.MOD_ID, "hsb_block").toString(), HSB_VERTEX_FORMAT),
+			return Pair.of(new ShaderInstance(resourceManager, ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "hsb_block").toString(), HSB_VERTEX_FORMAT),
 					shaderInstance -> hsbShader = shaderInstance);
 		} catch (IOException e) {
 			throw new RuntimeException(e);

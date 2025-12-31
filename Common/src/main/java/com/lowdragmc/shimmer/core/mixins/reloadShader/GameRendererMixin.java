@@ -23,18 +23,16 @@ import java.io.IOException;
 
 @Mixin(GameRenderer.class)
 abstract public class GameRendererMixin {
-	@SuppressWarnings({"UnresolvedMixinReference", "InvalidMemberReference", "InvalidInjectorMethodSignature", "MixinAnnotationTarget"})
 	@Redirect(method = "reloadShaders",
 			at = @At(value = "NEW", target = "(Lnet/minecraft/server/packs/resources/ResourceProvider;Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;)Lnet/minecraft/client/renderer/ShaderInstance;"))
 	private ShaderInstance redirectReloadShaders(ResourceProvider resourceProvider, String shaderName, VertexFormat vertexFormat) throws IOException {
 		return ReloadShaderManager.backupNewShaderInstance(resourceProvider, shaderName, vertexFormat);
 	}
 
-	@SuppressWarnings({"UnresolvedMixinReference", "InvalidMemberReference", "InvalidInjectorMethodSignature", "MixinAnnotationTarget"})
 	@Redirect(method = "loadEffect",
-			at = @At(value = "NEW", target = "(Lnet/minecraft/client/renderer/texture/TextureManager;Lnet/minecraft/server/packs/resources/ResourceManager;Lcom/mojang/blaze3d/pipeline/RenderTarget;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/PostChain;"))
-	private PostChain redirectLoadEffect(TextureManager textureManager, ResourceManager resourceManager, RenderTarget renderTarget, ResourceLocation resourceLocation) throws IOException {
-		return ReloadShaderManager.backupNewPostChain(textureManager, resourceManager, renderTarget, resourceLocation);
+                at = @At(value = "NEW", target = "Lnet/minecraft/client/renderer/PostChain;"))
+	private PostChain redirectLoadEffect(TextureManager textureManager, ResourceProvider resourceProvider, RenderTarget screenTarget, ResourceLocation resourceLocation) throws IOException {
+		return ReloadShaderManager.backupNewPostChain(textureManager, resourceProvider, screenTarget, resourceLocation);
 	}
 
 	@ModifyReturnValue(method = "createReloadListener", at = @At("RETURN"))

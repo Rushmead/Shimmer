@@ -1,10 +1,10 @@
 package com.lowdragmc.shimmer.neoforge.core.mixins.rubidium;
 
 import com.lowdragmc.shimmer.client.light.LightManager;
-import me.jellysquid.mods.sodium.client.gl.shader.GlProgram;
-import me.jellysquid.mods.sodium.client.render.chunk.ShaderChunkRenderer;
-import me.jellysquid.mods.sodium.client.render.chunk.shader.ChunkShaderInterface;
-import me.jellysquid.mods.sodium.client.render.chunk.shader.ChunkShaderOptions;
+import org.embeddedt.embeddium.impl.gl.shader.GlProgram;
+import org.embeddedt.embeddium.impl.render.chunk.ShaderChunkRenderer;
+import org.embeddedt.embeddium.impl.render.chunk.shader.ChunkShaderInterface;
+import org.embeddedt.embeddium.impl.render.chunk.shader.ChunkShaderOptions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -1,6 +1,6 @@
 package com.lowdragmc.shimmer.neoforge.core.mixins.rubidium;
 
-import me.jellysquid.mods.sodium.client.util.ModelQuadUtil;
+import org.embeddedt.embeddium.impl.util.ModelQuadUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

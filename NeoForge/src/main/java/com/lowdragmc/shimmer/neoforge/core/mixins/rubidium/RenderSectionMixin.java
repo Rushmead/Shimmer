@@ -2,7 +2,7 @@ package com.lowdragmc.shimmer.neoforge.core.mixins.rubidium;
 
 import com.lowdragmc.shimmer.client.light.ColorPointLight;
 import com.lowdragmc.shimmer.core.IRenderSection;
-import me.jellysquid.mods.sodium.client.render.chunk.RenderSection;
+import org.embeddedt.embeddium.impl.render.chunk.RenderSection;
 import org.spongepowered.asm.mixin.Mixin;
 
 import java.util.Collections;

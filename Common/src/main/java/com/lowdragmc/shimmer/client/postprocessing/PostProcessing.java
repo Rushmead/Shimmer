@@ -57,13 +57,13 @@ public class PostProcessing implements ResourceManagerReloadListener {
     public static final Set<RenderType> CHUNK_TYPES = Sets.newHashSet(RenderType.solid(), RenderType.cutoutMipped(), RenderType.cutout());
 
     private static final Map<String, PostProcessing> POST_PROCESSING_MAP = new HashMap<>();
-    public static final PostProcessing BLOOM_UNREAL = new PostProcessing("bloom_unreal", new ResourceLocation(ShimmerConstants.MOD_ID, "shaders/post/bloom_unreal.json"));
-    public static final PostProcessing BLOOM_UNITY = new PostProcessing("bloom_unity", new ResourceLocation(ShimmerConstants.MOD_ID, "shaders/post/bloom_unity.json"));
-    public static final PostProcessing WARP = new PostProcessing("warp", new ResourceLocation(ShimmerConstants.MOD_ID, "shaders/post/warp.json"));
-    public static final PostProcessing VHS = new PostProcessing("vhs", new ResourceLocation(ShimmerConstants.MOD_ID, "shaders/post/vhs.json"));
-    public static final PostProcessing FLICKER = new PostProcessing("flicker", new ResourceLocation(ShimmerConstants.MOD_ID, "shaders/post/flicker.json"));
-    public static final PostProcessing HALFTONE = new PostProcessing("halftone", new ResourceLocation(ShimmerConstants.MOD_ID, "shaders/post/halftone.json"));
-    public static final PostProcessing DOT_SCREEN = new PostProcessing("dot_screen", new ResourceLocation(ShimmerConstants.MOD_ID, "shaders/post/dot_screen.json"));
+    public static final PostProcessing BLOOM_UNREAL = new PostProcessing("bloom_unreal", ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "shaders/post/bloom_unreal.json"));
+    public static final PostProcessing BLOOM_UNITY = new PostProcessing("bloom_unity", ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "shaders/post/bloom_unity.json"));
+    public static final PostProcessing WARP = new PostProcessing("warp", ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "shaders/post/warp.json"));
+    public static final PostProcessing VHS = new PostProcessing("vhs", ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "shaders/post/vhs.json"));
+    public static final PostProcessing FLICKER = new PostProcessing("flicker", ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "shaders/post/flicker.json"));
+    public static final PostProcessing HALFTONE = new PostProcessing("halftone", ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "shaders/post/halftone.json"));
+    public static final PostProcessing DOT_SCREEN = new PostProcessing("dot_screen", ResourceLocation.fromNamespaceAndPath(ShimmerConstants.MOD_ID, "shaders/post/dot_screen.json"));
 
     public static AtomicBoolean enableBloomFilter = new AtomicBoolean(false);
     private static final Minecraft mc = Minecraft.getInstance();
@@ -243,7 +243,7 @@ public class PostProcessing implements ResourceManagerReloadListener {
         BlendMode lastBlendMode = BlendModeMixin.getLastApplied();
         RenderSystem.depthMask(false);
         RenderSystem.disableDepthTest();
-        postChain.process(mc.getFrameTime());
+        postChain.process(mc.getTimer().getGameTimeDeltaPartialTick(true));
         RenderUtils.fastBlit(postChain.getTempTarget("shimmer:output"), output);
         BlendModeMixin.setLastApplied(lastBlendMode);
     }
@@ -487,11 +487,11 @@ public class PostProcessing implements ResourceManagerReloadListener {
 		for (var config : Configuration.configs){
 			for (var bloom : config.blooms){
 				if (bloom.particleName != null) {
-					if (!ResourceLocation.isValidResourceLocation(bloom.particleName)){
+					if (ResourceLocation.read(bloom.particleName).isError()){
 						ShimmerConstants.LOGGER.error("invalid particle name " + bloom.particleName + " form" + config.configSource);
 						continue;
 					}
-					var particleLocation = new ResourceLocation(bloom.particleName);
+					var particleLocation = ResourceLocation.read(bloom.particleName).getOrThrow();
 					BLOOM_PARTICLE.add(particleLocation);
 				}else if (bloom.fluidName != null){
 					Pair<ResourceLocation, Fluid> fluid = bloom.fluid();

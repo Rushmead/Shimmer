@@ -2,9 +2,9 @@ package com.lowdragmc.shimmer.fabric.core.mixins.sodium;
 
 import com.lowdragmc.shimmer.client.light.LightManager;
 import com.lowdragmc.shimmer.core.IRenderSection;
-import me.jellysquid.mods.sodium.client.render.SodiumWorldRenderer;
-import me.jellysquid.mods.sodium.client.render.chunk.RenderSectionManager;
-import me.jellysquid.mods.sodium.client.render.viewport.Viewport;
+import net.caffeinemc.mods.sodium.client.render.SodiumWorldRenderer;
+import net.caffeinemc.mods.sodium.client.render.chunk.RenderSectionManager;
+import net.caffeinemc.mods.sodium.client.render.viewport.Viewport;
 import net.minecraft.client.Camera;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +26,7 @@ public abstract class SodiumWorldRendererMixin {
     @Shadow(remap = false) private RenderSectionManager renderSectionManager;
 
     @Inject(method = "setupTerrain", at = @At(value = "HEAD"), remap = false)
-    private void injectCompilePre(Camera camera, Viewport viewport, int frame, boolean spectator, boolean updateChunksImmediately, CallbackInfo ci) {
+    private void injectCompilePre(Camera camera, Viewport viewport, boolean spectator, boolean updateChunksImmediately, CallbackInfo ci) {
         Vec3 position = camera.getPosition();
         int blockLightSize = 0;
         int left = LightManager.INSTANCE.leftBlockLightCount();

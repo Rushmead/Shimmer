@@ -1,10 +1,10 @@
 package com.lowdragmc.shimmer.fabric.core.mixins.sodium;
 
 import com.lowdragmc.shimmer.client.light.LightManager;
-import me.jellysquid.mods.sodium.client.gl.shader.GlProgram;
-import me.jellysquid.mods.sodium.client.render.chunk.ShaderChunkRenderer;
-import me.jellysquid.mods.sodium.client.render.chunk.shader.ChunkShaderInterface;
-import me.jellysquid.mods.sodium.client.render.chunk.shader.ChunkShaderOptions;
+import net.caffeinemc.mods.sodium.client.gl.shader.GlProgram;
+import net.caffeinemc.mods.sodium.client.render.chunk.ShaderChunkRenderer;
+import net.caffeinemc.mods.sodium.client.render.chunk.shader.ChunkShaderInterface;
+import net.caffeinemc.mods.sodium.client.render.chunk.shader.ChunkShaderOptions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

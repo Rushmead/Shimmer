@@ -43,8 +43,8 @@ public abstract class FabricParticleEngineMixin {
 	private TextureManager textureManager;
 
 	@Inject(method = "render",
-			at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V", shift = At.Shift.BEFORE))
-	private void renderPostParticles(PoseStack matrixStack, MultiBufferSource.BufferSource buffer, LightTexture lightTexture, Camera activeRenderInfo, float partialTicks, CallbackInfo ci) {
+			at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;depthMask(Z)V", shift = At.Shift.BEFORE))
+	private void renderPostParticles(LightTexture lightTexture, Camera camera, float partialTick, CallbackInfo ci) {
 		for (IPostParticleType particleRenderType : PostProcessing.getBlockBloomPostParticleTypes()) {
 			RenderUtils.warpGLDebugLabel(particleRenderType.toString(), () -> {
 				Iterable<Particle> iterable = this.particles.get(particleRenderType);
@@ -52,8 +52,7 @@ public abstract class FabricParticleEngineMixin {
 					RenderSystem.setShader(GameRenderer::getParticleShader);
 					RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 					Tesselator tesselator = Tesselator.getInstance();
-					BufferBuilder bufferBuilder = tesselator.getBuilder();
-					particleRenderType.begin(bufferBuilder, this.textureManager);
+                    BufferBuilder bufferBuilder = particleRenderType.begin(tesselator, this.textureManager);
 
 					PostProcessing postProcessing = particleRenderType.getPost();
 					if (IrisHandle.INSTANCE != null && IrisHandle.INSTANCE.underShaderPack()) {
@@ -66,7 +65,7 @@ public abstract class FabricParticleEngineMixin {
 
 					for (Particle particle : iterable) {
 						try {
-							particle.render(bufferBuilder, activeRenderInfo, partialTicks);
+							particle.render(bufferBuilder, camera, partialTick);
 						} catch (Throwable throwable) {
 							CrashReport crashReport = CrashReport.forThrowable(throwable, "Rendering Particle");
 							CrashReportCategory crashReportCategory = crashReport.addCategory("Particle being rendered");
@@ -75,7 +74,6 @@ public abstract class FabricParticleEngineMixin {
 							throw new ReportedException(crashReport);
 						}
 					}
-					particleRenderType.end(tesselator);
 
 					Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
 
