@@ -38,9 +38,6 @@ public class ShimmerMixinPlugin implements IMixinConfigPlugin , MixinPluginShare
         if (IS_DASH_LOADER && mixinClassName.contains("reloadShader")){
             return false;
         }
-        if(IS_RUBIDIUM_LOAD && mixinClassName.contains("SectionCompilerMixin")){
-            return false;
-        }
         return true;
     }
 

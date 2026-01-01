@@ -1,4 +1,4 @@
-package com.lowdragmc.shimmer.neoforge.core.mixins.oculus;
+package com.lowdragmc.shimmer.neoforge.core.mixins.iris;
 
 import com.google.common.collect.ImmutableList;
 import com.llamalad7.mixinextras.sugar.Local;

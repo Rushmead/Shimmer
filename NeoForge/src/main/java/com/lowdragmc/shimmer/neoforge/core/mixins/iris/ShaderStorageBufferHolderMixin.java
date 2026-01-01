@@ -1,4 +1,4 @@
-package com.lowdragmc.shimmer.neoforge.core.mixins.oculus;
+package com.lowdragmc.shimmer.neoforge.core.mixins.iris;
 
 import com.lowdragmc.shimmer.comp.iris.IrisHandle;
 import net.irisshaders.iris.gl.buffer.ShaderStorageBuffer;

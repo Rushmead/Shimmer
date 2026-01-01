@@ -1,4 +1,4 @@
-package com.lowdragmc.shimmer.neoforge.core.mixins.oculus;
+package com.lowdragmc.shimmer.neoforge.core.mixins.iris;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -6,8 +6,6 @@ import com.lowdragmc.shimmer.comp.iris.ShaderpackInjection;
 import net.irisshaders.iris.shaderpack.programs.ProgramSet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-
-import java.util.function.Function;
 
 @Mixin(ProgramSet.class)
 public abstract class ProgramSetMixin {

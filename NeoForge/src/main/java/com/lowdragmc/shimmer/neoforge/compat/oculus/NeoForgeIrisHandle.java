@@ -5,7 +5,7 @@ import com.lowdragmc.shimmer.client.shader.RenderUtils;
 import com.lowdragmc.shimmer.client.shader.ShaderSSBO;
 import com.lowdragmc.shimmer.comp.iris.IrisHandle;
 import com.lowdragmc.shimmer.core.mixins.MixinPluginShared;
-import com.lowdragmc.shimmer.neoforge.core.mixins.rubidium.ShaderStorageBufferAccessor;
+import com.lowdragmc.shimmer.neoforge.core.mixins.iris.ShaderStorageBufferAccessor;
 import net.irisshaders.iris.api.v0.IrisApi;
 import net.irisshaders.iris.gl.buffer.ShaderStorageBuffer;
 import net.minecraft.client.Minecraft;
@@ -14,15 +14,15 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL46;
 
 @SuppressWarnings("unused")
-public class ForgeOculusHandle implements IrisHandle {
+public class NeoForgeIrisHandle implements IrisHandle {
 
     /**
      * must have this, this is called by reflect
      */
-    public ForgeOculusHandle() {
+    public NeoForgeIrisHandle() {
     }
 
-    private boolean available = MixinPluginShared.IS_OCULUS_LOAD;
+    private boolean available = MixinPluginShared.IS_IRIS_LOAD;
     @Nullable
     private Pair<ShaderSSBO, ShaderSSBO> ssbos;
     /**
@@ -66,6 +66,7 @@ public class ForgeOculusHandle implements IrisHandle {
             }
             int finalLightBufferIndex = lightBufferIndex;
             int finalEnvBufferIndex = envBufferIndex;
+            if (checkIsRelative(suffers[lightBufferIndex], "light") || checkIsRelative(suffers[envBufferIndex],"env")) return;
             RenderUtils.warpGLDebugLabel("initSSBO", () -> {
                 var lightBuffer = replaceSSBO(suffers, finalLightBufferIndex);
                 var envBuffer = replaceSSBO(suffers, finalEnvBufferIndex);
@@ -73,6 +74,15 @@ public class ForgeOculusHandle implements IrisHandle {
             });
         } else {
             ShimmerConstants.LOGGER.error("expect:{} as ShaderStorageBuffer[],actual:{}", buffers.toString(), buffers.getClass().getName());
+        }
+    }
+
+    private static boolean checkIsRelative(ShaderStorageBuffer buffer, String name) {
+        if (((ShaderStorageBufferAccessor)buffer).getInfo().relative()) {
+            ShimmerConstants.LOGGER.error("expect buffer:{} not relative", name);
+            return true;
+        } {
+            return false;
         }
     }
 
@@ -135,12 +145,11 @@ public class ForgeOculusHandle implements IrisHandle {
 
     @Override
     public void bindWriteMain() {
-        //TODO wait oculus update
-        Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
+        GBufferMainRenderTarget.autoBind();
     }
 
     @Override
     public int getCompositeId() {
-        return Minecraft.getInstance().getMainRenderTarget().getColorTextureId();
+        return GBufferMainRenderTarget.getID();
     }
 }

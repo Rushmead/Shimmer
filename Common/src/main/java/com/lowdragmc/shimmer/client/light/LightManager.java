@@ -71,7 +71,7 @@ public enum LightManager {
     private static String ChunkInjection(String s) {
         s = s.replace("void main()", getShimmerImport() + "void main()");
         return new StringBuffer(s).insert(s.lastIndexOf('}'),
-                Services.PLATFORM.useLightMap() ? "vertexColor = color_light_uv(pos, vertexColor,UV2);\n" : "vertexColor = color_light(pos, vertexColor);\n"
+                /** Services.PLATFORM.useLightMap() ? "vertexColor = color_light_uv(pos, vertexColor,UV2);\n" : **/ "vertexColor = color_light(pos, vertexColor);\n"
         ).toString();
     }
 
@@ -79,7 +79,7 @@ public enum LightManager {
         //TODO fix armor lighting. what the hell!!!!!
         s = s.replace("void main()", getShimmerImport() + "void main()");
         return new StringBuffer(s).insert(s.lastIndexOf('}'),
-                Services.PLATFORM.useLightMap() ? "vertexColor = color_light_uv(Position, vertexColor,UV2);\n" : "vertexColor = color_light(Position, vertexColor);\n"
+                /** Services.PLATFORM.useLightMap() ? "vertexColor = color_light_uv(Position, vertexColor,UV2);\n" : **/ "vertexColor = color_light(Position, vertexColor);\n"
         ).toString();
     }
 
@@ -127,13 +127,13 @@ public enum LightManager {
         return s;
     }
 
-    public static String embeddiumVVSHInjection(String s) {
+    public static String sodiumVVSHInjection(String s) {
         s = new StringBuffer(s).insert(s.lastIndexOf("out vec2 v_TexCoord;"), """
                  out float isBloom;
                  """).toString();
         s = new StringBuffer(s).insert(s.lastIndexOf("void main()"), getLightShader()).toString();
         s = new StringBuffer(s).insert(s.lastIndexOf('}'), Services.PLATFORM.useLightMap() ? """
-                    v_Color = color_light_uv(position, v_Color, ivec2(_vert_tex_light_coord));
+                    v_Color = color_light_uv(position, v_Color, ivec2(_vert_tex_light_coord * 256.0));
                 """ : """
                     v_Color = color_light(position, v_Color);
                 """).toString();

@@ -1,8 +1,8 @@
-package com.lowdragmc.shimmer.neoforge.core.mixins.rubidium;
+package com.lowdragmc.shimmer.neoforge.core.mixins.sodium;
 
 import com.lowdragmc.shimmer.client.light.ColorPointLight;
 import com.lowdragmc.shimmer.core.IRenderSection;
-import org.embeddedt.embeddium.impl.render.chunk.RenderSection;
+import net.caffeinemc.mods.sodium.client.render.chunk.RenderSection;
 import org.spongepowered.asm.mixin.Mixin;
 
 import java.util.Collections;

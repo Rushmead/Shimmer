@@ -174,7 +174,7 @@ public class PostProcessing implements ResourceManagerReloadListener {
         return s;
     }
 
-    public static String embeddiumBloomMRTFSHInjection(String s) {
+    public static String sodiumBloomMRTFSHInjection(String s) {
         s = new StringBuffer(s).insert(s.lastIndexOf("in vec4 v_Color;"), """
                         in float isBloom;
                         """).toString();

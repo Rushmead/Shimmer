@@ -1,12 +1,12 @@
-package com.lowdragmc.shimmer.neoforge.core.mixins.rubidium;
+package com.lowdragmc.shimmer.neoforge.core.mixins.sodium;
 
 import com.lowdragmc.shimmer.client.light.LightManager;
 import com.lowdragmc.shimmer.core.IRenderSection;
+import net.caffeinemc.mods.sodium.client.render.SodiumWorldRenderer;
+import net.caffeinemc.mods.sodium.client.render.chunk.RenderSectionManager;
+import net.caffeinemc.mods.sodium.client.render.viewport.Viewport;
 import net.minecraft.client.Camera;
 import net.minecraft.world.phys.Vec3;
-import org.embeddedt.embeddium.impl.render.EmbeddiumWorldRenderer;
-import org.embeddedt.embeddium.impl.render.chunk.RenderSectionManager;
-import org.embeddedt.embeddium.impl.render.viewport.Viewport;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,12 +20,12 @@ import java.nio.FloatBuffer;
  * @date 2022/05/31
  * @implNote TODO
  */
-@Mixin(EmbeddiumWorldRenderer.class)
+@Mixin(SodiumWorldRenderer.class)
 public abstract class SodiumWorldRendererMixin {
     @Shadow(remap = false) private RenderSectionManager renderSectionManager;
 
     @Inject(method = "setupTerrain", at = @At(value = "HEAD"), remap = false)
-    private void injectCompilePre(Camera camera, Viewport viewport, int frame, boolean spectator, boolean updateChunksImmediately, CallbackInfo ci) {
+    private void injectCompilePre(Camera camera, Viewport viewport, boolean spectator, boolean updateChunksImmediately, CallbackInfo ci) {
         Vec3 position = camera.getPosition();
         int blockLightSize = 0;
         int left = LightManager.INSTANCE.leftBlockLightCount();

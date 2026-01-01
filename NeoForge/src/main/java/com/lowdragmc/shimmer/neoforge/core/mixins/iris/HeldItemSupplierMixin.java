@@ -1,4 +1,4 @@
-package com.lowdragmc.shimmer.neoforge.core.mixins.oculus;
+package com.lowdragmc.shimmer.neoforge.core.mixins.iris;
 
 import com.lowdragmc.shimmer.client.light.LightManager;
 import net.minecraft.client.Minecraft;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(targets = "net.irisshaders.iris.uniforms.IdMapUniforms.HeldItemSupplier", remap = false)
+@Mixin(targets = "net.irisshaders.iris.uniforms.IdMapUniforms$HeldItemSupplier", remap = false)
 public abstract class HeldItemSupplierMixin {
 
     @Shadow

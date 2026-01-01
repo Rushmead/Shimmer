@@ -37,9 +37,10 @@ dependencies {
     forgeRuntimeLibrary("icyllis.modernui:ModernUI-Core:$modernui_core_version")
     modCompileOnly("icyllis.modernui:ModernUI-NeoForge:${minecraft_version}-${modernui_version}")
 
-    modImplementation("maven.modrinth:embeddium:1.0.15+mc1.21.1")
+    modCompileOnly("maven.modrinth:sodium:mc1.21.1-0.6.13-neoforge")
+    modCompileOnly("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
     // There is no oculus 1.20.4 version currently
-    modImplementation("maven.modrinth:iris:1.8.12+1.21.1-neoforge")
+    modCompileOnly("maven.modrinth:iris:1.8.12+1.21.1-neoforge")
 }
 
 tasks.processResources {

@@ -23,7 +23,6 @@
     "RenderSectionMixin",
     "RenderSystemMixin",
     "RenderTargetMixin",
-    "SectionCompilerMixin",
     "SectionCompilerResultMixin",
     "SectionRenderDispatcherMixin",
     "ShaderInstanceGlslProcessorMixin",

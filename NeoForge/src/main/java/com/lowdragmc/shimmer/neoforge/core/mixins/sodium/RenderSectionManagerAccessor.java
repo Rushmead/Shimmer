@@ -1,7 +1,7 @@
-package com.lowdragmc.shimmer.neoforge.core.mixins.rubidium;
+package com.lowdragmc.shimmer.neoforge.core.mixins.sodium;
 
-import org.embeddedt.embeddium.impl.render.chunk.RenderSectionManager;
-import org.embeddedt.embeddium.impl.render.chunk.lists.SortedRenderLists;
+import net.caffeinemc.mods.sodium.client.render.chunk.RenderSectionManager;
+import net.caffeinemc.mods.sodium.client.render.chunk.lists.SortedRenderLists;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 

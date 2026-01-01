@@ -1,4 +1,4 @@
-package com.lowdragmc.shimmer.neoforge.core.mixins.rubidium;
+package com.lowdragmc.shimmer.neoforge.core.mixins.iris;
 
 import net.irisshaders.iris.gl.buffer.BuiltShaderStorageInfo;
 import net.irisshaders.iris.gl.buffer.ShaderStorageBuffer;
